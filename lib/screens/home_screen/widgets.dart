@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:recipes_app/models/data_model.dart';
 import 'package:recipes_app/utils/constants.dart';
 
 //text under searchbar
@@ -95,11 +96,13 @@ class RecipeCardSection extends StatelessWidget {
   final String heading;
   final Color? backgroundColor;
   final Color? headingColor;
+  final List<DataModel> recipeList;
   const RecipeCardSection({
     super.key,
     required this.heading,
     this.backgroundColor,
     this.headingColor,
+    required this.recipeList,
   });
 
   @override
@@ -124,17 +127,19 @@ class RecipeCardSection extends StatelessWidget {
           SizedBox(
             height: 300,
             child: ListView.builder(
+              reverse: true,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
-              itemBuilder: (context, index) => const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3),
+              itemCount: recipeList.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: CustomCard(
                   cardHeight: 290,
                   cardWidth: 245,
-                  title: 'Maharashtrian style tasty poha',
+                  title: recipeList[index].dishName,
                   titleSize: 18,
                   textSize: 16,
+                  itemImage: recipeList[index].imageUrl,
                 ),
               ),
             ),
@@ -151,6 +156,7 @@ class CustomCard extends StatelessWidget {
   final double cardHeight;
   final double cardWidth;
   final String title;
+  final String itemImage;
   final double titleSize;
   final double textSize;
   const CustomCard({
@@ -160,6 +166,7 @@ class CustomCard extends StatelessWidget {
     required this.title,
     required this.titleSize,
     required this.textSize,
+    required this.itemImage,
   });
 
   @override
@@ -182,14 +189,12 @@ class CustomCard extends StatelessWidget {
                           topEnd: Radius.circular(10),
                           topStart: Radius.circular(10)),
                       color: Colors.teal),
-                  child: const ClipRRect(
-                    borderRadius: BorderRadius.only(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10)),
                     child: Image(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            'https://www.wholesomeyum.com/wp-content/uploads/2022/12/wholesomeyum-Garlic-Butter-Chicken-1.jpg')),
+                        fit: BoxFit.cover, image: NetworkImage(itemImage)),
                   ),
                 ),
                 Positioned(
@@ -208,6 +213,7 @@ class CustomCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
